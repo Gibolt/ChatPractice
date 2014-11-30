@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -19,6 +20,7 @@ public class MainActivity extends Activity {
 	EditText messageBox;
 	Button sendButton, receiveButton;
 	ListView listView;
+	TextView textView;
 	
 	ArrayList<String> listItems = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
@@ -32,6 +34,7 @@ public class MainActivity extends Activity {
         receiveButton = (Button)   findViewById(R.id.receiveButton);
         messageBox    = (EditText) findViewById(R.id.messageBox);
         listView      = (ListView) findViewById(R.id.listView);
+        textView      = (TextView) findViewById(R.id.textView);
      
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
         listView.setAdapter(adapter);
@@ -39,8 +42,8 @@ public class MainActivity extends Activity {
         sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				messageBox.setText("Clicked");
-				addItems(view);
+				textView.setText("Clicked");
+				addItems("Clicked send");
                 Toast.makeText(MainActivity.this, "Button Clicked", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -54,10 +57,6 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, "Message translated", Toast.LENGTH_SHORT).show();
 			}
 		});
-    }
-    
-    public void addItems(View v) {
-    	adapter.add("Clicked again");
     }
     
     public void addItems(String s) {
