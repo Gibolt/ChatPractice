@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +24,7 @@ public class MainActivity extends Activity {
 	TextView textView;
 	
 	ArrayList<String> listItems = new ArrayList<String>();
-	ArrayAdapter<String> adapter;
+	static ArrayAdapter<String> adapter;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class MainActivity extends Activity {
         listView      = (ListView) findViewById(R.id.listView);
         textView      = (TextView) findViewById(R.id.textView);
      
+        Log.d("Translate", "App started");
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
         listView.setAdapter(adapter);
         
@@ -52,14 +54,13 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				String text = messageBox.getText().toString();
-				text = TranslationService.translate(text, "en", "es");
-				addItems(text);
+				new TranslationService("en", "es").execute(text);
                 Toast.makeText(MainActivity.this, "Message translated", Toast.LENGTH_SHORT).show();
 			}
 		});
     }
     
-    public void addItems(String s) {
+    public static void addItems(String s) {
     	adapter.add(s);
     } 
 
