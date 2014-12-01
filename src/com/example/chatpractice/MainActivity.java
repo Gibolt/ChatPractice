@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				String text = messageBox.getText().toString();
-				new TranslationService("en", "es").execute(text);
+				TranslationService.translate(text, "en", "es");
                 Toast.makeText(MainActivity.this, "Message translated", Toast.LENGTH_SHORT).show();
 			}
 		});
