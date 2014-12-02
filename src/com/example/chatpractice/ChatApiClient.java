@@ -9,10 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class ChatApiClient {	
-	private final String baseUrl = "104.236.28.245:4730/";
+	private final  String baseUrl = "http://wildhacks.cloudapp.net:4730/";
 	private static String urlFormatRegister = "register/%s/%s";
 	private static String urlFormatGet      = "get/%s";
 	private static String urlFormatSend     = "send/%s/%s/%s";
@@ -23,6 +25,8 @@ public class ChatApiClient {
 		@Override
 		public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 			String success = ChatApiClient.parseRegisterResponse(response);
+			Log.d("Translate", success);
+			MainActivity.addItems(success);
 		}
 	};
 
@@ -30,6 +34,16 @@ public class ChatApiClient {
 		@Override
 		public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 			ArrayList<Message> messages = ChatApiClient.parseGetResponse(response);
+			for (Message m : messages) {
+				MainActivity.addItems(m.toString());
+			}
+		}
+	};
+	
+	private static JsonHttpResponseHandler sendMessagesHandler = new JsonHttpResponseHandler() {
+		@Override
+		public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+			MainActivity.addItems("Sent successfully");
 		}
 	};
 
@@ -52,7 +66,7 @@ public class ChatApiClient {
 
 	public void sendMessage(User to, String msg) {
 		String url = String.format(urlFormatSend, encode(UserMain.name()), encode(to.getName()), encode(msg));
-		GenericRestClient.get(fullUrl(url), null, null);
+		GenericRestClient.get(fullUrl(url), null, sendMessagesHandler);
 	}
 
 	public void randomUser() {

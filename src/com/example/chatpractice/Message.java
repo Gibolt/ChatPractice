@@ -12,4 +12,9 @@ public class Message {
 		this.lang = lang;
 		this.time = time;
 	}
+	
+	@Override
+	public String toString() {
+		return this.message;
+	}
 }

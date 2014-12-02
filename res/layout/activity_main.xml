@@ -9,25 +9,17 @@
     tools:context="com.example.chatpractice.MainActivity" >
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/userView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/sendButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_below="@+id/textView"
-        android:text="Send" />
 
     <EditText
         android:id="@+id/messageBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/sendButton"
+        android:layout_alignLeft="@+id/regButton"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/sendButton"
+        android:layout_below="@+id/regButton"
         android:ems="10" >
 
         <requestFocus />
@@ -42,11 +34,43 @@
     </ListView>
 
     <Button
-        android:id="@+id/receiveButton"
+        android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/messageBox"
+        android:layout_toRightOf="@+id/recButton"
+        android:text="Send" />
+
+    <Button
+        android:id="@+id/recButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/messageBox"
+        android:layout_toRightOf="@+id/regButton"
+        android:text="Receive" />
+
+    <Button
+        android:id="@+id/regButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userView"
+        android:layout_below="@+id/langView"
+        android:text="Register" />
+
+    <Button
+        android:id="@+id/translateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/sendButton"
         android:layout_toRightOf="@+id/sendButton"
-        android:text="Button" />
+        android:text="Trans" />
+
+    <TextView
+        android:id="@+id/langView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/userView"
+        android:layout_alignBottom="@+id/userView"
+        android:layout_toRightOf="@+id/userView" />
 
 </RelativeLayout>

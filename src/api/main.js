@@ -58,7 +58,6 @@ UserList.prototype.addUser = function(name, lang) {
 	var exists = this.has(name);
 	if (!exists) {
 		this.users[name] = new User(name, lang);
-		console.log("Registered: " + name);
 	}
 	return !exists;
 }
@@ -109,6 +108,9 @@ function validLanguage(lang) {
 	return (langs.indexOf(lang) > -1);
 }
 
+function decode(text) {
+	return decodeURIComponent(text);
+}
 
 var userList = new UserList();
 function init() {
@@ -126,6 +128,7 @@ app.get('/register/:user/:lang', function(req, res) {
 	var user = req.params.user;
 	var lang = req.params.lang || "en";
 	if (!user || !registerUser(user, lang)) {
+		console.log("Failed to register: " + user);
 		res.send({status:"failed"});
 	}
 	else {
@@ -138,9 +141,9 @@ app.get('/register/:user/:lang', function(req, res) {
 app.get('/send/:from/:to/:msg', function(req, res) {
 	res.set("Connection", "close");
 	res.end();
-	var msg  = req.params.msg;
-	var from = req.params.from;
-	var to   = req.params.to;
+	var msg  = decode(req.params.msg);
+	var from = decode(req.params.from);
+	var to   = decode(req.params.to);
 	console.log("Sent " + msg + " from " + from + " to " + to);
 	sendMessage(msg, from, to);
 });

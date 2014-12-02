@@ -19,9 +19,10 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	EditText messageBox;
-	Button sendButton, receiveButton;
+	Button regButton, recButton, sendButton, transButton;
 	ListView listView;
-	TextView textView;
+	TextView langView, userView;
+	int mode = 0;
 	
 	ArrayList<String> listItems = new ArrayList<String>();
 	static ArrayAdapter<String> adapter;
@@ -31,33 +32,60 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sendButton    = (Button)   findViewById(R.id.sendButton);
-        receiveButton = (Button)   findViewById(R.id.receiveButton);
-        messageBox    = (EditText) findViewById(R.id.messageBox);
-        listView      = (ListView) findViewById(R.id.listView);
-        textView      = (TextView) findViewById(R.id.textView);
+        regButton   = (Button)   findViewById(R.id.regButton);
+        recButton   = (Button)   findViewById(R.id.recButton);
+        sendButton  = (Button)   findViewById(R.id.sendButton);
+        transButton = (Button)   findViewById(R.id.translateButton);
+        messageBox  = (EditText) findViewById(R.id.messageBox);
+        listView    = (ListView) findViewById(R.id.listView);
+        userView    = (TextView) findViewById(R.id.userView);
+        langView    = (TextView) findViewById(R.id.langView);
      
         Log.d("Translate", "App started");
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
         listView.setAdapter(adapter);
+        langView.setText(UserMain.lang());
+        
+        regButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				userView.setText(messageBox.getText().toString());
+				UserMain.set(userView.getText().toString(), langView.getText().toString());
+				messageBox.setText("");
+				Log.d("Translate", UserMain.name() + ": " + UserMain.lang());
+				ChatApiClient client = new ChatApiClient();
+				client.registerUser();
+                Toast.makeText(MainActivity.this, "Registering User", Toast.LENGTH_SHORT).show();
+			}
+		});
+        
+        recButton.setOnClickListener(new View.OnClickListener() {
+        	@Override
+        	public void onClick(View view) {
+        		ChatApiClient client = new ChatApiClient();
+        		client.getMessages();
+        		Toast.makeText(MainActivity.this, "Message Received", Toast.LENGTH_SHORT).show();
+        	}
+        });
         
         sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				textView.setText("Clicked");
-				addItems("Clicked send");
-                Toast.makeText(MainActivity.this, "Button Clicked", Toast.LENGTH_SHORT).show();
+				User u = new User("a","en");
+				ChatApiClient client = new ChatApiClient();
+				client.sendMessage(u, messageBox.getText().toString());
+                Toast.makeText(MainActivity.this, "Sending message to: " + u.getName(), Toast.LENGTH_SHORT).show();
 			}
 		});
         
-        receiveButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String text = messageBox.getText().toString();
-				TranslationService.translate(text, "en", "es");
-                Toast.makeText(MainActivity.this, "Message translated", Toast.LENGTH_SHORT).show();
-			}
-		});
+        transButton.setOnClickListener(new View.OnClickListener() {
+        	@Override
+        	public void onClick(View view) {
+        		String text = messageBox.getText().toString();
+        		TranslationService.translate(text, "en", "es");
+        		Toast.makeText(MainActivity.this, "Message translated", Toast.LENGTH_SHORT).show();
+        	}
+        });
     }
     
     public static void addItems(String s) {
