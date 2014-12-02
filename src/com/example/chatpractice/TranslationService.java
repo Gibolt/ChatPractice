@@ -1,17 +1,14 @@
 package com.example.chatpractice;
 
 import com.loopj.android.http.*;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import org.apache.http.Header;
 import org.json.*;
 
 public class TranslationService {
 	private String from = "en";
 	private String to   = "es";
-	private static String urlFormat = "http://translate.google.com/translate_a/t?client=t&text=%s&hl=en&sl=%s&tl=%s&ie=UTF-8&oe=UTF-8&multires=1&otf=1&pc=1&trs=1&ssel=3&tsel=6&sc=1";
-	private static String urlEncode = "UTF-8";
+	private static final String baseUrl = "http://translate.google.com/";
+	private static final String urlFormat = "translate_a/t?client=t&text=%s&hl=en&sl=%s&tl=%s&ie=UTF-8&oe=UTF-8&multires=1&otf=1&pc=1&trs=1&ssel=3&tsel=6&sc=1";
 
 	private static JsonHttpResponseHandler addToMessages = new JsonHttpResponseHandler() {
 		@Override
@@ -44,7 +41,7 @@ public class TranslationService {
 	}
 
 	private void translate(String text, JsonHttpResponseHandler handler) {
-		String url = formatUrl(text);
+		String url = URL.formatSpecial(baseUrl, urlFormat, messageEncode(text), from, to);
 		GenericRestClient.get(url, null, handler);
 	}
 
@@ -52,24 +49,11 @@ public class TranslationService {
 	 * This encodes the message so that Google will translate multiple sentences
 	 */
 	private String messageEncode(String text) {
-		text = text.replaceAll("\\.", "。");
-		text = text.replaceAll("\\?", "？");
-		text = text.replaceAll("\\!", "！");
-		text = text.replaceAll("\\;", "；");
-		return encode(text);
-	}
-	
-	private String encode(String str) {
-		try {
-			return URLEncoder.encode(str, urlEncode);
-		} catch (UnsupportedEncodingException e) {
-		}
-		return "";
-	}
-
-	private String formatUrl(String text) {
-		String url = String.format(urlFormat, messageEncode(text), encode(from), encode(to));
-		return url;
+		text = text.replaceAll("\\.", "。")
+				   .replaceAll("\\?", "？")
+				   .replaceAll("\\!", "！")
+				   .replaceAll("\\;", "；");
+		return text;
 	}
 
 	public static String parseGoogleResponse(JSONArray json) {

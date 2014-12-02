@@ -1,7 +1,5 @@
 package com.example.chatpractice;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import org.apache.http.Header;
@@ -13,13 +11,11 @@ import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class ChatApiClient {	
-	private final  String baseUrl = "http://wildhacks.cloudapp.net:4730/";
+public class ChatApiClient {
 	private static String urlFormatRegister = "register/%s/%s";
 	private static String urlFormatGet      = "get/%s";
 	private static String urlFormatSend     = "send/%s/%s/%s";
 	private static String urlFormatRandom   = "random/%s";
-	private static String urlEncode = "UTF-8";
 
 	private static JsonHttpResponseHandler registerUserHandler = new JsonHttpResponseHandler() {
 		@Override
@@ -55,23 +51,23 @@ public class ChatApiClient {
 	};
 
 	public void registerUser() {
-		String url = String.format(urlFormatRegister, encode(UserMain.name()), encode(UserMain.lang()));
-		GenericRestClient.get(fullUrl(url), null, registerUserHandler);
+		String url = URL.format(urlFormatRegister, UserMain.name(), UserMain.lang());
+		GenericRestClient.get(url, null, registerUserHandler);
 	}
 
 	public void getMessages() {
-		String url = String.format(urlFormatGet, encode(UserMain.name()));
-		GenericRestClient.get(fullUrl(url), null, getMessagesHandler);
+		String url = URL.format(urlFormatGet, UserMain.name());
+		GenericRestClient.get(url, null, getMessagesHandler);
 	}
 
 	public void sendMessage(User to, String msg) {
-		String url = String.format(urlFormatSend, encode(UserMain.name()), encode(to.getName()), encode(msg));
-		GenericRestClient.get(fullUrl(url), null, sendMessagesHandler);
+		String url = URL.format(urlFormatSend, UserMain.name(), to.getName(), msg);
+		GenericRestClient.get(url, null, sendMessagesHandler);
 	}
 
 	public void randomUser() {
-		String url = String.format(urlFormatRandom, encode(UserMain.name()));
-		GenericRestClient.get(fullUrl(url), null, randomUserHandler);
+		String url = URL.format(urlFormatRandom, UserMain.name());
+		GenericRestClient.get(url, null, randomUserHandler);
 	}
 
 	public static String parseRegisterResponse(JSONObject o) {
@@ -103,17 +99,5 @@ public class ChatApiClient {
 		} catch (JSONException e) {
 		}
 		return user;
-	}
-
-	private String encode(String str) {
-		try {
-			return URLEncoder.encode(str, urlEncode);
-		} catch (UnsupportedEncodingException e) {
-		}
-		return "";
-	}
-	
-	private String fullUrl(String url) {
-		return baseUrl + url;
 	}
 }
